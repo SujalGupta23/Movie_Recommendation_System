@@ -1,0 +1,15 @@
+# Python files
+
+__pycache__/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Sensitive data
+config.py
+
+# Virtual environments
+rs_mini/
+venv/
+env/
+pyvenv.cfg
