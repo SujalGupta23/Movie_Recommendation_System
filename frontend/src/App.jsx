@@ -11,6 +11,7 @@ import Registration from "./pages/Register/Registration";
 import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/LandingPage";
 import Preferences from "./components/Preferences";
+import Founders from "./pages/Founders";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/register" element={<Registration />} />
         <Route path="/preference" element={<Preferences />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/founders" element={<Founders />} />
       </Routes>
     </Router>
   );
