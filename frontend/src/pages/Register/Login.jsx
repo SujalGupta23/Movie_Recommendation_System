@@ -9,6 +9,7 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
     try {
       const response = await fetch("http://127.0.0.1:5000/login", {
@@ -16,15 +17,23 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, pass: password }),
+        mode: "cors",
       });
 
       const data = await response.json();
 
       if (response.ok) {
         alert("Login successful!");
-        navigate("/dashboard"); // Redirect to the dashboard page
+        navigate("/dashboard", {
+          state: {
+            email: data.user.email,
+            username: data.user.username,
+            genres: data.user.genres,
+          },
+        });
       } else {
+        console.error("Server error:", data);
         setErrorMessage(data.message || "Invalid login credentials");
       }
     } catch (error) {
@@ -34,26 +43,28 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-          Log in to your account
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+      <div className="relative bg-gray-800 bg-opacity-90 rounded-2xl shadow-lg p-8 max-w-sm w-full">
+        <h2 className="text-3xl font-extrabold text-center text-yellow-400 mb-4">
+          MovieFlix Login
         </h2>
-      </div>
+        <p className="text-gray-300 text-center mb-6">
+          Enter your credentials to access your account.
+        </p>
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        {errorMessage && (
+          <div className="text-red-500 text-sm mb-4 text-center font-medium">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
-          {errorMessage && (
-            <div className="text-red-500 text-sm/6 font-medium">
-              {errorMessage}
-            </div>
-          )}
           <div>
             <label
               htmlFor="email"
-              className="block text-sm/6 font-medium text-gray-900"
+              className="block text-sm font-medium text-gray-200"
             >
-              Email address
+              Email Address
             </label>
             <div className="mt-2">
               <input
@@ -62,7 +73,8 @@ export default function Login() {
                 type="email"
                 required
                 autoComplete="email"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                className="block w-full rounded-md bg-gray-700 border border-gray-600 py-2 px-3 text-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 placeholder-gray-500"
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -72,7 +84,7 @@ export default function Login() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm/6 font-medium text-gray-900"
+              className="block text-sm font-medium text-gray-200"
             >
               Password
             </label>
@@ -83,7 +95,8 @@ export default function Login() {
                 type="password"
                 required
                 autoComplete="current-password"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
+                className="block w-full rounded-md bg-gray-700 border border-gray-600 py-2 px-3 text-gray-300 shadow-sm focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 placeholder-gray-500"
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -93,12 +106,22 @@ export default function Login() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="w-full flex justify-center rounded-md bg-gradient-to-r from-yellow-500 to-red-500 py-2.5 text-sm font-semibold text-white shadow-lg hover:from-yellow-600 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transform hover:scale-105 transition duration-300"
             >
-              Sign in
+              Sign In
             </button>
           </div>
         </form>
+
+        <p className="mt-6 text-center text-gray-400 text-sm">
+          New here?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-yellow-400 font-medium cursor-pointer hover:text-yellow-300"
+          >
+            Create an account
+          </span>
+        </p>
       </div>
     </div>
   );
